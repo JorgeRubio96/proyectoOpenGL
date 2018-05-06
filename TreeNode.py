@@ -7,6 +7,15 @@ class Node:
         self.left = None
         self.right = None
 
+    def setX(self, parentX, degrees):
+        pass
+
+    def setY(self, parentY, degrees):
+        pass
+
+    def setZ(self, Z):
+        self.z = Z
+
     def setValue(self, newVal):
         self.value = newVal
 
@@ -19,7 +28,7 @@ class Node:
                 return self.left.addChild(newChild)
             else:
                 self.left = newChild
-                lol = (self, newChild)
+                lol = (self, self.left)
                 print(lol)
                 return lol
 
@@ -28,7 +37,7 @@ class Node:
                 return self.right.addChild(newChild)
             else:
                 self.right = newChild
-                lol = (self, newChild)
+                lol = (self, self.right)
                 print(lol)
                 return lol
 
