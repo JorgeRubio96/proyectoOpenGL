@@ -20,11 +20,13 @@
 
 #include <stdlib.h>
 
-static int slices = 16;
-static int stacks = 16;
+static int slices = 3;
+static int stacks = 3;
+double a = 90.0;
 
 /* GLUT callback Handlers */
 
+//funcion para hacer resize de la figura y de la ventana
 static void resize(int width, int height)
 {
     const float ar = (float) width / (float) height;
@@ -38,10 +40,12 @@ static void resize(int width, int height)
     glLoadIdentity() ;
 }
 
+//funcion donde se maneja la parte de las visualizaciones,
+//tanto su posicion, como su movimiento de rotasion y traslacion
 static void display(void)
 {
-    const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    const double a = t*90.0;
+    //const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+    //const double a = t*90.0;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3d(1,0,0);
@@ -53,30 +57,52 @@ static void display(void)
         glutSolidCone(1,1,slices,stacks);
     glPopMatrix();
 
+
+
     glutSwapBuffers();
 }
 
-
+//funcion que controla la rotación de las estructuras
+//esta escuchando constantemente el teclado
 static void key(unsigned char key, int x, int y)
 {
     switch (key)
     {
         case 27 :
+        case 'p' :
+
+            break;
         case 'q':
             exit(0);
             break;
 
         case '+':
-            slices++;
-            stacks++;
+            //slices++;
+            //stacks++;
+            a += 20;
             break;
 
         case '-':
             if (slices>3 && stacks>3)
             {
-                slices--;
-                stacks--;
+                //slices--;
+                //stacks--;
             }
+            a -= 20;
+            break;
+        case 'd':
+            //slices++;
+            //stacks++;
+            a += 20;
+            break;
+
+        case 'a':
+            if (slices>3 && stacks>3)
+            {
+                //slices--;
+                //stacks--;
+            }
+            a -= 20;
             break;
     }
 
@@ -88,6 +114,7 @@ static void idle(void)
     glutPostRedisplay();
 }
 
+//--------------------------ambient light-----------------------------
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
 const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -97,7 +124,7 @@ const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
 const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
 const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat high_shininess[] = { 100.0f };
-
+//----------------------end ambient light---------------------------
 /* Program entry point */
 
 int main(int argc, char *argv[])
