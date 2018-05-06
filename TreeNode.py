@@ -1,4 +1,5 @@
 import math
+import random
 
 class Node:
     def __init__(self, newVal):
@@ -8,6 +9,7 @@ class Node:
         self.z = None
         self.left = None
         self.right = None
+        self.children = []
 
     def printCoords(self):
         print("Val: ",self.value)
@@ -29,31 +31,39 @@ class Node:
         return self.value
 
     def addChild(self, newChild):
-        if newChild.getValue() < self.value:
-            if self.left:
-                return self.left.addChild(newChild)
-            else:
-                self.left = newChild
-                lol = (self, self.left)
-                print(lol)
-                return lol
+        # if newChild.getValue() < self.value:
+        #     if self.left:
+        #         return self.left.addChild(newChild)
+        #     else:
+        #         self.left = newChild
+        #         lol = (self, self.left)
+        #         print(lol)
+        #         return lol
+        #
+        # if newChild.getValue() > self.value:
+        #     if self.right:
+        #         return self.right.addChild(newChild)
+        #     else:
+        #         self.right = newChild
+        #         lol = (self, self.right)
+        #         print(lol)
+        #         return lol
+        if len(self.children) < 5:
+            self.children.append(newChild)
+            lol = (self,self.children[-1])
+            print(lol)
+            return lol
+        else:
+            return random.choice(self.children).addChild(newChild)
 
-        if newChild.getValue() > self.value:
-            if self.right:
-                return self.right.addChild(newChild)
-            else:
-                self.right = newChild
-                lol = (self, self.right)
-                print(lol)
-                return lol
 
     def getChildren(self):
-        children = []
+        # children = []
+        #
+        # if self.left:
+        #     children += [self.left]
+        #
+        # if self.right:
+        #     children += [self.right]
 
-        if self.left:
-            children += [self.left]
-
-        if self.right:
-            children += [self.right]
-
-        return children
+        return self.children
