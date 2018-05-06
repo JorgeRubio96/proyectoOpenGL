@@ -1,3 +1,5 @@
+import math
+
 class Node:
     def __init__(self, newVal):
         self.value = newVal
@@ -7,11 +9,15 @@ class Node:
         self.left = None
         self.right = None
 
+    def printCoords(self):
+        print("Val: ",self.value)
+        print("X: ",self.x,"\tY: ",self.y,"\tZ: ",self.z)
+
     def setX(self, parentX, degrees):
-        pass
+        self.x = parentX + math.cos(math.radians(degrees))
 
     def setY(self, parentY, degrees):
-        pass
+        self.y = parentY + math.sin(math.radians(degrees))
 
     def setZ(self, Z):
         self.z = Z

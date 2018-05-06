@@ -33,10 +33,11 @@ class Tree:
                     degrees = getDegrees(child_count,num_of_childs)
 
                     child_1.setZ(level_counter)
-                    child_1.set_x(child.x,degrees)
-                    child_1.set_y(child.y,degrees)
+                    child_1.setX(child.x,degrees)
+                    child_1.setY(child.y,degrees)
+                    child_1.printCoords()
                     child_count += 1
-                    nextLevel += child_1
+                    nextLevel += [child_1]
 
             print(vals)
 
