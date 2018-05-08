@@ -58,6 +58,7 @@ static void display(void)
     // glPopMatrix();
 
     glPushMatrix();
+    glBegin(GL_TRIANGLES);
         glTranslated(-3,0,-6);
         glRotated(-60,1,0,0); //rotacion del cono con la punta arriba girando
         glRotated(a,0,0,1);
@@ -79,9 +80,8 @@ static void display(void)
         glVertex3f( -0.6909830056250525 ,  0.9510565162951536 ,  2 );
         glColor3f(1.0f, 0.0f, 0.0f);
         glVertex3f( 0.19098300562505244 ,  -0.587785252292473 ,  2 );
+    glEnd();
     glPopMatrix();
-
-
 
     glutSwapBuffers();
 }
