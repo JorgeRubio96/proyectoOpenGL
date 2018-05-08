@@ -12,9 +12,9 @@ class Node:
         self.children = []
 
     def printCoords(self):
-        print("Val: ",self.value)
-        print("X: ",self.x,"\tY: ",self.y,"\tZ: ",self.z)
-        print("glVertex3d(",self.x,", ", self.y,", ", self.z,");")
+        # print("Val: ",self.value)
+        # print("X: ",self.x,"\tY: ",self.y,"\tZ: ",self.z)
+        print("createCube(", self.x,", ", self.y,", ", self.z,");")
 
     def setX(self, parentX, degrees):
         self.x = parentX + math.cos(math.radians(degrees))
@@ -52,7 +52,7 @@ class Node:
         if len(self.children) < 5:
             self.children.append(newChild)
             lol = (self,self.children[-1])
-            print(lol)
+            #print(lol)
             return lol
         else:
             return random.choice(self.children).addChild(newChild)

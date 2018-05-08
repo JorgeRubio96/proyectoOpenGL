@@ -19,175 +19,186 @@
 #endif
 
 #include <stdlib.h>
+// ----------------------------------------------------------
+// Includes
+// ----------------------------------------------------------
+#include <stdio.h>
+#include <stdarg.h>
+#include <math.h>
+#define GL_GLEXT_PROTOTYPES
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
-static int slices = 3;
-static int stacks = 3;
-double a = 90.0;
+// ----------------------------------------------------------
+// Function Prototypes
+// ----------------------------------------------------------
+void display();
+void specialKeys();
 
-/* GLUT callback Handlers */
+// ----------------------------------------------------------
+// Global Variables
+// ----------------------------------------------------------
+double rotate_y=0;
+double rotate_x=0;
 
-//funcion para hacer resize de la figura y de la ventana
-static void resize(int width, int height)
-{
-    const float ar = (float) width / (float) height;
 
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-ar, ar, -1.0, 1.0, 2.0, 100.0);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity() ;
-}
-
-//funcion donde se maneja la parte de las visualizaciones,
-//tanto su posicion, como su movimiento de rotasion y traslacion
-static void display(void)
-{
-    //const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    //const double a = t*90.0;
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glColor3d(1,0,0);
-
-    // glPushMatrix();
-    //     glTranslated(0,0,-3);
-    //     glRotated(-60,1,0,0); //rotacion del cono con la punta arriba girando
-    //     glRotated(a,0,0,1);
-    //     glutSolidCone(1,1,slices,stacks);
-    // glPopMatrix();
-
+void createCube(float x, float y, float z){
     glPushMatrix();
-    glBegin(GL_TRIANGLES);
-        glTranslated(-3,0,-6);
-        glRotated(-60,1,0,0); //rotacion del cono con la punta arriba girando
-        glRotated(a,0,0,1);
-        glColor3f(1.0f, 0.0f, 0.0f); //red
-        glVertex3f( 1.0 ,  0.0 ,  1 );
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f( 0.30901699437494745 ,  0.9510565162951535 ,  1 );
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f( -0.8090169943749473 ,  0.5877852522924732 ,  1 );
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f( -0.8090169943749476 ,  -0.587785252292473 ,  1 );
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f( 0.30901699437494723 ,  -0.9510565162951536 ,  1 );
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f( 2.0 ,  0.0 ,  2 );
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f( 1.3090169943749475 ,  0.9510565162951535 ,  2 );
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f( -0.6909830056250525 ,  0.9510565162951536 ,  2 );
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f( 0.19098300562505244 ,  -0.587785252292473 ,  2 );
-    glEnd();
+        glTranslated(x,y,z);
+
+        //Multi-colored side - FRONT
+        glBegin(GL_POLYGON);
+
+        glColor3f( 1.0, 0.0, 0.0 );     glVertex3f(  0.5, -0.5, -0.5 );      // P1 is red
+        glColor3f( 0.0, 1.0, 0.0 );     glVertex3f(  0.5,  0.5, -0.5 );      // P2 is green
+        glColor3f( 0.0, 0.0, 1.0 );     glVertex3f( -0.5,  0.5, -0.5 );      // P3 is blue
+        glColor3f( 1.0, 0.0, 1.0 );     glVertex3f( -0.5, -0.5, -0.5 );      // P4 is purple
+
+        glEnd();
+
+        // White side - BACK
+        glBegin(GL_POLYGON);
+        glColor3f(   1.0,  1.0, 1.0 );
+        glVertex3f(  0.5, -0.5, 0.5 );
+        glVertex3f(  0.5,  0.5, 0.5 );
+        glVertex3f( -0.5,  0.5, 0.5 );
+        glVertex3f( -0.5, -0.5, 0.5 );
+        glEnd();
+
+        // Purple side - RIGHT
+        glBegin(GL_POLYGON);
+        glColor3f(  1.0,  0.0,  1.0 );
+        glVertex3f( 0.5, -0.5, -0.5 );
+        glVertex3f( 0.5,  0.5, -0.5 );
+        glVertex3f( 0.5,  0.5,  0.5 );
+        glVertex3f( 0.5, -0.5,  0.5 );
+        glEnd();
+
+        // Green side - LEFT
+        glBegin(GL_POLYGON);
+        glColor3f(   0.0,  1.0,  0.0 );
+        glVertex3f( -0.5, -0.5,  0.5 );
+        glVertex3f( -0.5,  0.5,  0.5 );
+        glVertex3f( -0.5,  0.5, -0.5 );
+        glVertex3f( -0.5, -0.5, -0.5 );
+        glEnd();
+
+        // Blue side - TOP
+        glBegin(GL_POLYGON);
+        glColor3f(   0.0,  0.0,  1.0 );
+        glVertex3f(  0.5,  0.5,  0.5 );
+        glVertex3f(  0.5,  0.5, -0.5 );
+        glVertex3f( -0.5,  0.5, -0.5 );
+        glVertex3f( -0.5,  0.5,  0.5 );
+        glEnd();
+
+        // Red side - BOTTOM
+        glBegin(GL_POLYGON);
+        glColor3f(   1.0,  0.0,  0.0 );
+        glVertex3f(  0.5, -0.5, -0.5 );
+        glVertex3f(  0.5, -0.5,  0.5 );
+        glVertex3f( -0.5, -0.5,  0.5 );
+        glVertex3f( -0.5, -0.5, -0.5 );
+        glEnd();
     glPopMatrix();
-
-    glutSwapBuffers();
+    //glutSwapBuffers();
 }
 
-//funcion que controla la rotación de las estructuras
-//esta escuchando constantemente el teclado
-static void key(unsigned char key, int x, int y)
-{
-    switch (key)
-    {
-        case 27 :
-        case 'p' :
 
-            break;
-        case 'q':
-            exit(0);
-            break;
+// ----------------------------------------------------------
+// display() Callback function
+// ----------------------------------------------------------
+void display(){
 
-        case '+':
-            //slices++;
-            //stacks++;
-            a += 20;
-            break;
+  //  Clear screen and Z-buffer
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        case '-':
-            if (slices>3 && stacks>3)
-            {
-                //slices--;
-                //stacks--;
-            }
-            a -= 20;
-            break;
-        case 'd':
-            //slices++;
-            //stacks++;
-            a += 20;
-            break;
+  // Reset transformations
+  glLoadIdentity();
 
-        case 'a':
-            if (slices>3 && stacks>3)
-            {
-                //slices--;
-                //stacks--;
-            }
-            a -= 20;
-            break;
-    }
+  // Other Transformations
+  // glTranslatef( 0.1, 0.0, 0.0 );      // Not included
+  // glRotatef( 180, 0.0, 1.0, 0.0 );    // Not included
 
-    glutPostRedisplay();
+  // Rotate when user changes rotate_x and rotate_y
+  glRotatef( rotate_x, 1.0, 0.0, 0.0 );
+  glRotatef( rotate_y, 0.0, 1.0, 0.0 );
+
+  // Other Transformations
+  // glScalef( 2.0, 2.0, 0.0 );          // Not included
+
+
+//  createCube(0,0,0);
+//  createCube(1,1,0);
+
+    createCube( 1.0 ,  0.0 ,  1 );
+    createCube( 0.30901699437494745 ,  0.9510565162951535 ,  1 );
+    createCube( -0.8090169943749473 ,  0.5877852522924732 ,  1 );
+    createCube( -0.8090169943749476 ,  -0.587785252292473 ,  1 );
+    createCube( 0.30901699437494723 ,  -0.9510565162951536 ,  1 );
+    createCube( 2.0 ,  0.0 ,  2 );
+    createCube( 0.5000000000000002 ,  0.8660254037844387 ,  2 );
+    createCube( 0.49999999999999956 ,  -0.8660254037844384 ,  2 );
+    createCube( 0.19098300562505244 ,  -0.587785252292473 ,  2 );
+
+  glFlush();
+  glutSwapBuffers();
+
 }
 
-static void idle(void)
-{
-    glutPostRedisplay();
+// ----------------------------------------------------------
+// specialKeys() Callback Function
+// ----------------------------------------------------------
+void specialKeys( int key, int x, int y ) {
+
+  //  Right arrow - increase rotation by 5 degree
+  if (key == GLUT_KEY_RIGHT)
+    rotate_y += 5;
+
+  //  Left arrow - decrease rotation by 5 degree
+  else if (key == GLUT_KEY_LEFT)
+    rotate_y -= 5;
+
+  else if (key == GLUT_KEY_UP)
+    rotate_x += 5;
+
+  else if (key == GLUT_KEY_DOWN)
+    rotate_x -= 5;
+
+  //  Request display update
+  glutPostRedisplay();
+
 }
 
-//--------------------------ambient light-----------------------------
-const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
+// ----------------------------------------------------------
+// main() function
+// ----------------------------------------------------------
+int main(int argc, char* argv[]){
 
-const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
-const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
-const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat high_shininess[] = { 100.0f };
-//----------------------end ambient light---------------------------
-/* Program entry point */
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
+  //  Initialize GLUT and process user parameters
+  glutInit(&argc,argv);
     glutInitWindowSize(640,480);
     glutInitWindowPosition(10,10);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+  //  Request double buffered true color window with Z-buffer
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-    glutCreateWindow("GLUT Shapes");
+  // Create window
+  glutCreateWindow("Awesome Cube");
 
-    glutReshapeFunc(resize);
-    glutDisplayFunc(display);
-    glutKeyboardFunc(key);
-    glutIdleFunc(idle);
+  //  Enable Z-buffer depth test
+  glEnable(GL_DEPTH_TEST);
 
-    glClearColor(1,1,1,1);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+  // Callback functions
+  glutDisplayFunc(display);
+  glutSpecialFunc(specialKeys);
 
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+  //  Pass control to GLUT for events
+  glutMainLoop();
 
-    glEnable(GL_LIGHT0);
-    glEnable(GL_NORMALIZE);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHTING);
+  //  Return to OS
+  return 0;
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-
-    glutMainLoop();
-
-    return EXIT_SUCCESS;
 }
