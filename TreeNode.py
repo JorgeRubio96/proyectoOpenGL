@@ -14,6 +14,7 @@ class Node:
     def printCoords(self):
         print("Val: ",self.value)
         print("X: ",self.x,"\tY: ",self.y,"\tZ: ",self.z)
+        print("glVertex3d(",self.x,", ", self.y,", ", self.z,");")
 
     def setX(self, parentX, degrees):
         self.x = parentX + math.cos(math.radians(degrees))

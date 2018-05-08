@@ -50,11 +50,35 @@ static void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3d(1,0,0);
 
+    // glPushMatrix();
+    //     glTranslated(0,0,-3);
+    //     glRotated(-60,1,0,0); //rotacion del cono con la punta arriba girando
+    //     glRotated(a,0,0,1);
+    //     glutSolidCone(1,1,slices,stacks);
+    // glPopMatrix();
+
     glPushMatrix();
-        glTranslated(0,0,-3);
+        glTranslated(-3,0,-6);
         glRotated(-60,1,0,0); //rotacion del cono con la punta arriba girando
         glRotated(a,0,0,1);
-        glutSolidCone(1,1,slices,stacks);
+        glColor3f(1.0f, 0.0f, 0.0f); //red
+        glVertex3f( 1.0 ,  0.0 ,  1 );
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f( 0.30901699437494745 ,  0.9510565162951535 ,  1 );
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f( -0.8090169943749473 ,  0.5877852522924732 ,  1 );
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f( -0.8090169943749476 ,  -0.587785252292473 ,  1 );
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f( 0.30901699437494723 ,  -0.9510565162951536 ,  1 );
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f( 2.0 ,  0.0 ,  2 );
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f( 1.3090169943749475 ,  0.9510565162951535 ,  2 );
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f( -0.6909830056250525 ,  0.9510565162951536 ,  2 );
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f( 0.19098300562505244 ,  -0.587785252292473 ,  2 );
     glPopMatrix();
 
 
