@@ -17,13 +17,13 @@ class Node:
         print("createCube(", self.x,", ", self.y,", ", self.z,");")
 
     def setX(self, parentX, degrees):
-        self.x = parentX + math.cos(math.radians(degrees))
+        self.x = parentX + math.cos(math.radians(degrees))*(30/self.z)
 
     def setY(self, parentY, degrees):
-        self.y = parentY + math.sin(math.radians(degrees))
+        self.y = parentY + math.sin(math.radians(degrees))*(30/self.z)
 
     def setZ(self, Z):
-        self.z = Z
+        self.z = Z*5
 
     def setValue(self, newVal):
         self.value = newVal
@@ -52,7 +52,7 @@ class Node:
         if len(self.children) < 5:
             self.children.append(newChild)
             lol = (self,self.children[-1])
-            #print(lol)
+            # print(lol)
             return lol
         else:
             return random.choice(self.children).addChild(newChild)
