@@ -1,6 +1,6 @@
 //
 // File:        main.cpp
-// Authors:     Luis Hernández, Carlos Sánchez, Jorge Rubio 
+// Authors:     Luis Hernández, Carlos Sánchez, Jorge Rubio
 // Created:     06/05/2018
 // Project:     Source code for Make a 3D Menu with cubes and lines
 // Description: Creates an OpenGL window and draws a series of 3D cube
@@ -19,6 +19,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <math.h>
+#include <fstream>
+#include <iostream>
 #define GL_GLEXT_PROTOTYPES
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -26,6 +28,7 @@
 #include <GL/glut.h>
 #endif
 
+using namespace std;
 // ----------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------
@@ -38,15 +41,21 @@ void specialKeys();
 double rotate_y=0;
 double rotate_x=0;
 double a = 90;
+int vertex = 0;
+ofstream oFile;
 
 void drawLine(float x1, float y1, float z1, float x2, float y2, float z2){
     glPushMatrix();
+        vertex +=2;
         glLineWidth(2.5);
         glColor3f(1.0, 0.0, 0.0);
         glScalef(.03f,.03f,.03f);
         glBegin(GL_LINES);
             glVertex3f(x1, y1, z1);
+            oFile << "v " << x1 << " " << y1 << " " << z1 << endl;
             glVertex3f(x2, y2, z2);
+            oFile << "v " << x2 << " " << y2 << " " << z2 << endl;
+            oFile << "f "<< vertex - 1 << " " << vertex << endl;
         glEnd();
     glPopMatrix();
 }
@@ -57,58 +66,98 @@ void createCube(float x, float y, float z){
         glTranslated(x,y,z);
 
         //Multi-colored side - FRONT
+        vertex +=4;
         glBegin(GL_POLYGON);
 
-        glColor3f( 1.0, 0.0, 0.0 );     glVertex3f(  0.5, -0.5, -0.5 );      // P1 is red
-        glColor3f( 0.0, 1.0, 0.0 );     glVertex3f(  0.5,  0.5, -0.5 );      // P2 is green
-        glColor3f( 0.0, 0.0, 1.0 );     glVertex3f( -0.5,  0.5, -0.5 );      // P3 is blue
-        glColor3f( 1.0, 0.0, 1.0 );     glVertex3f( -0.5, -0.5, -0.5 );      // P4 is purple
+        glColor3f( 51/255, 193/255, 1.0 );    
+        glVertex3f(  0.5, -0.5, -0.5 );      // P1 is red
+        oFile << "v " << x + 0.5 << " " << y - 0.5 << " " << z - 0.5 << endl;
+        glColor3f( 0.0, 1.0, 0.0 );     
+        glVertex3f(  0.5,  0.5, -0.5 );      // P2 is green
+        oFile << "v " << x + 0.5 << " " << y + 0.5 << " " << z - 0.5 << endl;
+        glColor3f( 0.0, 0.0, 1.0 );     
+        glVertex3f( -0.5,  0.5, -0.5 );      // P3 is blue
+        oFile << "v " << x - 0.5 << " " << y + 0.5 << " " << z - 0.5 << endl;
+        glColor3f( 1.0, 0.0, 1.0 );     
+        glVertex3f( -0.5, -0.5, -0.5 );      // P4 is purple
+        oFile << "v " << x - 0.5 << " " << y - 0.5 << " " << z - 0.5 << endl;
+        oFile << "f "<< vertex - 3 << " " << vertex - 2 << " " << vertex - 1 << " " << vertex << endl;
 
         glEnd();
 
         // White side - BACK
         glBegin(GL_POLYGON);
+        vertex +=4;
         glColor3f(   1.0,  1.0, 1.0 );
         glVertex3f(  0.5, -0.5, 0.5 );
+        oFile << "v " << x + 0.5 << " " << y - 0.5 << " " << z + 0.5 << endl;
         glVertex3f(  0.5,  0.5, 0.5 );
+        oFile << "v " << x + 0.5 << " " << y + 0.5 << " " << z + 0.5 << endl;
         glVertex3f( -0.5,  0.5, 0.5 );
+        oFile << "v " << x - 0.5 << " " << y + 0.5 << " " << z + 0.5 << endl;
         glVertex3f( -0.5, -0.5, 0.5 );
+        oFile << "v " << x - 0.5 << " " << y - 0.5 << " " << z + 0.5 << endl;
+        oFile << "f "<< vertex - 3 << " " << vertex - 2 << " " << vertex - 1 << " " << vertex << endl;
         glEnd();
 
         // Purple side - RIGHT
         glBegin(GL_POLYGON);
+        vertex +=4;
         glColor3f(  1.0,  0.0,  1.0 );
         glVertex3f( 0.5, -0.5, -0.5 );
+        oFile << "v " << x + 0.5 << " " << y - 0.5 << " " << z - 0.5 << endl;
         glVertex3f( 0.5,  0.5, -0.5 );
+        oFile << "v " << x + 0.5 << " " << y + 0.5 << " " << z - 0.5 << endl;
         glVertex3f( 0.5,  0.5,  0.5 );
+        oFile << "v " << x + 0.5 << " " << y + 0.5 << " " << z + 0.5 << endl;
         glVertex3f( 0.5, -0.5,  0.5 );
+        oFile << "v " << x + 0.5 << " " << y - 0.5 << " " << z + 0.5 << endl;
+        oFile << "f "<< vertex - 3 << " " << vertex - 2 << " " << vertex - 1 << " " << vertex << endl;
         glEnd();
 
         // Green side - LEFT
         glBegin(GL_POLYGON);
+        vertex +=4;
         glColor3f(   0.0,  1.0,  0.0 );
         glVertex3f( -0.5, -0.5,  0.5 );
+        oFile << "v " << x - 0.5 << " " << y - 0.5 << " " << z + 0.5 << endl;
         glVertex3f( -0.5,  0.5,  0.5 );
+        oFile << "v " << x - 0.5 << " " << y + 0.5 << " " << z + 0.5 << endl;
         glVertex3f( -0.5,  0.5, -0.5 );
+        oFile << "v " << x - 0.5 << " " << y + 0.5 << " " << z - 0.5 << endl;
         glVertex3f( -0.5, -0.5, -0.5 );
+        oFile << "v " << x - 0.5 << " " << y - 0.5 << " " << z - 0.5 << endl;
+        oFile << "f "<< vertex - 3 << " " << vertex - 2 << " " << vertex - 1 << " " << vertex << endl;
         glEnd();
 
         // Blue side - TOP
         glBegin(GL_POLYGON);
+        vertex +=4;
         glColor3f(   0.0,  0.0,  1.0 );
         glVertex3f(  0.5,  0.5,  0.5 );
+        oFile << "v " << x + 0.5 << " " << y + 0.5 << " " << z + 0.5 << endl;
         glVertex3f(  0.5,  0.5, -0.5 );
+        oFile << "v " << x + 0.5 << " " << y + 0.5 << " " << z - 0.5 << endl;
         glVertex3f( -0.5,  0.5, -0.5 );
+        oFile << "v " << x - 0.5 << " " << y + 0.5 << " " << z - 0.5 << endl;
         glVertex3f( -0.5,  0.5,  0.5 );
+        oFile << "v " << x - 0.5 << " " << y + 0.5 << " " << z + 0.5 << endl;
+        oFile << "f "<< vertex - 3 << " " << vertex - 2 << " " << vertex - 1 << " " << vertex << endl;
         glEnd();
 
         // Red side - BOTTOM
         glBegin(GL_POLYGON);
-        glColor3f(   1.0,  0.0,  0.0 );
+        vertex +=4;
+        glColor3f(   1.0, 1.0, 1.0);
         glVertex3f(  0.5, -0.5, -0.5 );
+        oFile << "v " << x + 0.5 << " " << y - 0.5 << " " << z - 0.5 << endl;
         glVertex3f(  0.5, -0.5,  0.5 );
+        oFile << "v " << x + 0.5 << " " << y - 0.5 << " " << z + 0.5 << endl;
         glVertex3f( -0.5, -0.5,  0.5 );
+        oFile << "v " << x - 0.5 << " " << y - 0.5 << " " << z + 0.5 << endl;
         glVertex3f( -0.5, -0.5, -0.5 );
+        oFile << "v " << x - 0.5 << " " << y - 0.5 << " " << z - 0.5 << endl;
+        oFile << "f "<< vertex - 3 << " " << vertex - 2 << " " << vertex - 1 << " " << vertex << endl;
         glEnd();
     glPopMatrix();
     //glutSwapBuffers();
@@ -140,6 +189,7 @@ void display(){
 
 //  createCube(0,0,0);
 //  createCube(1,1,0);
+  oFile.open("file.txt");
 glRotated(a,0,0,1);
 createCube( 0 ,  0 ,  0 );
 createCube( 6.0 ,  0.0 ,  5 );
@@ -345,7 +395,7 @@ createCube( -4.045084971874736 ,  5.2043105580553535 ,  20 );
 drawLine( -5.545084971874736 , 5.2043105580553535 , 15 , -4.045084971874736 , 5.2043105580553535 , 20 );
 createCube( -1.8090169943749475 ,  2.5756549974596856 ,  20 );
 drawLine( -3.3090169943749475 , 2.5756549974596856 , 15 , -1.8090169943749475 , 2.5756549974596856 , 20 );
-
+    oFile.close();
   glFlush();
   glutSwapBuffers();
 
@@ -375,10 +425,10 @@ void specialKeys( int key, int x, int y ) {
     exit(0);
 
   else if (key == GLUT_KEY_F2) //menu movement
-     a -= 20;
+     a -= 90;
 
   else if (key == GLUT_KEY_F3) //menu movement
-     a += 20;
+     a += 90;
 
 
   //  Request display update
