@@ -3,6 +3,9 @@ from TreeNode import Node
 def getDegrees(NumberOfChild, Brothers):
     return (360/Brothers) * NumberOfChild
 
+def pEdeges(parent,child):
+    print("drawLine(",parent.x,",",parent.y,",",parent.z,",",child.x,",",child.y,",",child.z,");")
+
 class Tree:
     def __init__(self, rootVal):
         self.root = Node(rootVal)
@@ -17,7 +20,9 @@ class Tree:
         self.root.y = 0
         self.root.z = 0
         level_counter = 0
+        self.root.printCoords()
         currentLevel = [self.root]
+
         nextLevel = []
 
         while len(currentLevel) > 0:
@@ -36,6 +41,7 @@ class Tree:
                     child_1.setX(child.x,degrees)
                     child_1.setY(child.y,degrees)
                     child_1.printCoords()
+                    pEdeges(child,child_1)
                     child_count += 1
                     nextLevel += [child_1]
 
